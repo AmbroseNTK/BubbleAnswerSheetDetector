@@ -1,0 +1,11 @@
+C:\Users\nguye\Source\Repos\BubbleAnswerSheetDetector\ProjectorHelper\bin\Debug\ProjectorHelper.exe.config
+C:\Users\nguye\Source\Repos\BubbleAnswerSheetDetector\ProjectorHelper\bin\Debug\ProjectorHelper.exe
+C:\Users\nguye\Source\Repos\BubbleAnswerSheetDetector\ProjectorHelper\bin\Debug\ProjectorHelper.pdb
+C:\Users\nguye\Source\Repos\BubbleAnswerSheetDetector\ProjectorHelper\obj\Debug\ProjectorHelper.csprojResolveAssemblyReference.cache
+C:\Users\nguye\Source\Repos\BubbleAnswerSheetDetector\ProjectorHelper\obj\Debug\ProjectorHelper.Canvas.resources
+C:\Users\nguye\Source\Repos\BubbleAnswerSheetDetector\ProjectorHelper\obj\Debug\ProjectorHelper.Form1.resources
+C:\Users\nguye\Source\Repos\BubbleAnswerSheetDetector\ProjectorHelper\obj\Debug\ProjectorHelper.Properties.Resources.resources
+C:\Users\nguye\Source\Repos\BubbleAnswerSheetDetector\ProjectorHelper\obj\Debug\ProjectorHelper.csproj.GenerateResource.cache
+C:\Users\nguye\Source\Repos\BubbleAnswerSheetDetector\ProjectorHelper\obj\Debug\ProjectorHelper.csproj.CoreCompileInputs.cache
+C:\Users\nguye\Source\Repos\BubbleAnswerSheetDetector\ProjectorHelper\obj\Debug\ProjectorHelper.exe
+C:\Users\nguye\Source\Repos\BubbleAnswerSheetDetector\ProjectorHelper\obj\Debug\ProjectorHelper.pdb

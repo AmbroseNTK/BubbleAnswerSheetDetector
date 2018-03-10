@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BubbleAnswerSheetDetector", "BubbleAnswerSheetDetector\BubbleAnswerSheetDetector.csproj", "{423C7804-E472-4A56-A0B1-8280C20907C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectorHelper", "ProjectorHelper\ProjectorHelper.csproj", "{B6D71B67-AF61-43F1-9A73-4BACACA89546}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{423C7804-E472-4A56-A0B1-8280C20907C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{423C7804-E472-4A56-A0B1-8280C20907C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{423C7804-E472-4A56-A0B1-8280C20907C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{423C7804-E472-4A56-A0B1-8280C20907C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6D71B67-AF61-43F1-9A73-4BACACA89546}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6D71B67-AF61-43F1-9A73-4BACACA89546}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6D71B67-AF61-43F1-9A73-4BACACA89546}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6D71B67-AF61-43F1-9A73-4BACACA89546}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4D9726CF-9531-434D-9021-6B40A83F4351}
+	EndGlobalSection
+EndGlobal
