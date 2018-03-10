@@ -28,6 +28,11 @@ namespace BubbleAnswerSheetDetector
         Mat cropped;
 
         VectorOfVectorOfPoint docContours;
+        VectorOfPointF docConers;
+
+        float cutOffset = 5;
+
+        Size answerSheetRealSize;
         public Form1()
         {
             InitializeComponent();
@@ -49,6 +54,8 @@ namespace BubbleAnswerSheetDetector
                     MessageBox.Show("Cannot open this image", "Load error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+
+            answerSheetRealSize = new Size(956,593);
         }
 
         private void btStep1_Click(object sender, EventArgs e)
@@ -77,6 +84,59 @@ namespace BubbleAnswerSheetDetector
 
             docContours = new VectorOfVectorOfPoint();
 
+            docConers = new VectorOfPointF();
+
+            for(int i = 0; i < contours.Size; i++)
+            {
+                double peri = CvInvoke.ArcLength(contours[i], true);
+                VectorOfPoint poly = new VectorOfPoint();
+                CvInvoke.ApproxPolyDP(contours[i], poly, 0.02 * peri, true);
+                Rectangle docBounding = CvInvoke.BoundingRectangle(poly);
+                if (poly.Size == 4 && docBounding.Width>500 &&docBounding.Height>300)
+                {
+                    PointF[] listConer = new PointF[4];
+
+                    Point[] ps = poly.ToArray().OrderBy(point => point.X).ToArray<Point>();
+                    if (ps[0].Y > ps[1].Y)
+                    {
+                        listConer[0] = ps[1];
+                        listConer[3] = ps[0];
+                    }
+                    else
+                    {
+                        listConer[3] = ps[1];
+                        listConer[0] = ps[0];
+                    }
+
+                    if (ps[2].Y < ps[3].Y)
+                    {
+                        listConer[1] = ps[2];
+                        listConer[2] = ps[3];
+                    }
+                    else
+                    {
+                        listConer[2] = ps[2];
+                        listConer[1] = ps[3];
+                    }
+
+                    listConer[0].X += cutOffset;
+                    listConer[0].Y += cutOffset;
+
+                    listConer[1].X -= cutOffset;
+                    listConer[1].Y += cutOffset;
+
+                    listConer[2].X -= cutOffset;
+                    listConer[2].Y -= cutOffset;
+
+                    listConer[3].X += cutOffset;
+                    listConer[3].Y -= cutOffset;
+
+                    docConers.Push(listConer);
+                    MessageBox.Show("Document was discovered");
+                    break;
+                }
+            }
+
             //CvInvoke.DrawContours(inputMat, contours, -1, new MCvScalar(255, 0, 0),3);
 
             imageResult.Image = inputMat;
@@ -93,40 +153,26 @@ namespace BubbleAnswerSheetDetector
             cropped = new Mat();
             VectorOfPointF coners = new VectorOfPointF();
 
-            List<Point> contourPoints;
-            
-            //find bounding contour
-            contourPoints = docContours.ToArrayOfArray()
-                .Where(group => group.Length == docContours.ToArrayOfArray().Max(points => points.Length))
-                .SingleOrDefault().ToList();
-            string data = "";
-            foreach(Point point in contourPoints)
-            {
-                data += point.X + "," + point.Y + System.Environment.NewLine;
-            }
-            File.WriteAllText("points.txt", data);
-            int maxX = contourPoints.Max(p => p.X);
-            int maxY = contourPoints.Max(p => p.Y);
-            int minX = contourPoints.Min(p => p.X);
-            int minY = contourPoints.Min(p => p.Y);
-            List<Point> ascX = contourPoints.OrderBy(p => p.X).ToList<Point>();
-            List<Point> ascY = contourPoints.OrderBy(p => p.Y).ToList<Point>();
+            //List<Point> contourPoints;
 
-            coners.Push(new PointF[] { new PointF(minX, minY), new PointF(maxX, minY), new PointF(maxX, maxY), new PointF(minX, maxY) });
-           
-            
+            ////find bounding contour
+            //contourPoints = docContours.ToArrayOfArray()
+            //    .Where(group => group.Length == docContours.ToArrayOfArray().Max(points => points.Length))
+            //    .SingleOrDefault().ToList();
+
+
+
             Rectangle rect = CvInvoke.BoundingRectangle(docContours[0]);
             Mat quad = new Mat();
-            quad.Create(rect.Height, rect.Width, DepthType.Cv8U, 0);
-
+            quad.Create(answerSheetRealSize.Height, answerSheetRealSize.Width, DepthType.Cv8U, 0);
             VectorOfPointF quadPts = new VectorOfPointF();
             quadPts.Push(new PointF[] { new PointF(0, 0), new PointF(quad.Cols, 0), new PointF(quad.Cols, quad.Rows), new PointF(0, quad.Rows) });
 
-            Mat transmat = CvInvoke.GetPerspectiveTransform(coners, quadPts);
+            Mat transmat = CvInvoke.GetPerspectiveTransform(docConers, quadPts);
             CvInvoke.WarpPerspective(grayInput, cropped, transmat, quad.Size);
             imageResult.Image = cropped;
-            input.DrawPolyline(contourPoints.ToArray<Point>(), true, new Gray(0), 10);
-            imageResult.Image = input;
+            //input.DrawPolyline(contourPoints.ToArray<Point>(), true, new Gray(0), 10);
+            //imageResult.Image = input;
         }
 
         private void btStep4_Click(object sender, EventArgs e)
@@ -136,7 +182,7 @@ namespace BubbleAnswerSheetDetector
 
             VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
             Mat hierarchy = new Mat();
-            CvInvoke.FindContours(edgeInput.Clone(), contours, hierarchy, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+            CvInvoke.FindContours(thresh.Clone(), contours, hierarchy, RetrType.External, ChainApproxMethod.ChainApproxSimple);
             CvInvoke.DrawContours(cropped, contours, -1, new MCvScalar(0), 2);
 
             imageResult.Image = cropped;
@@ -151,10 +197,10 @@ namespace BubbleAnswerSheetDetector
                 if (bounding.Width >= 20 && bounding.Height >= 20 && ratio >= 0.95 && ratio <= 1.05)
                 {
                     questionContours.Add(contour.ToArray());
-                    CvInvoke.Rectangle(inputMat, bounding, new MCvScalar(255, 0, 0), 3);
+                    CvInvoke.Rectangle(thresh, bounding, new MCvScalar(255, 0, 0), 1);
                 }
             }
-            imageResult.Image = inputMat;
+            imageResult.Image = thresh;
 
         }
 

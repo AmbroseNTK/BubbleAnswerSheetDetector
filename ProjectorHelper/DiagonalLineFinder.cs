@@ -39,7 +39,6 @@ namespace ProjectorHelper
         public static double Distance(Line line, Point point)
         => Math.Abs(line.NormalVector.X * point.X + line.NormalVector.Y * point.Y + line.CFactor) / Math.Sqrt(Math.Pow(line.NormalVector.X, 2) + Math.Pow(line.NormalVector.Y, 2));
 
-        
 
         public static double AngleBetween(Line line1, Line line2)
         => Math.Acos(
