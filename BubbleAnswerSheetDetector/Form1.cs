@@ -33,6 +33,8 @@ namespace BubbleAnswerSheetDetector
         float cutOffset = 5;
 
         Size answerSheetRealSize;
+
+        List<List<AnswerCell>> answerSheet;
         public Form1()
         {
             InitializeComponent();
@@ -198,16 +200,67 @@ namespace BubbleAnswerSheetDetector
                 {
                     questionContours.Add(contour.ToArray());
                     CvInvoke.Rectangle(thresh, bounding, new MCvScalar(255, 0, 0), 1);
+                    
                 }
             }
+            questionContours.Sort(new Comparison<Point[]>((a, b) =>
+            {
+                if (a[0].X > b[0].X)
+                    return 1;
+                else if (a[0].X < b[0].X)
+                    return -1;
+                return 0;
+            }));
+
+            answerSheet = new List<List<AnswerCell>>();
+            int xError = 5;
+            int currentX = questionContours[0][0].X;
+            int currentGroup = 0;
+            answerSheet.Add(new List<AnswerCell>());
+            for(int i = 1; i < questionContours.Count; i++)
+            {
+                if (Math.Abs(questionContours[i][0].X - currentX) < xError)
+                {
+
+                    VectorOfPoint contour = new VectorOfPoint(questionContours[i]);
+                    Rectangle bounding = CvInvoke.BoundingRectangle(contour.GetInputArray().GetMat());
+                    Mat croppedBubble = new Mat(thresh,bounding);
+                    
+                    //Add to current column
+                    answerSheet[currentGroup].Add(new AnswerCell() { Contour = questionContours[i], Marked=CvInvoke.CountNonZero(croppedBubble) });
+                }
+                else
+                {
+                    //Sort current column
+                    answerSheet[currentGroup].Sort(new Comparison<AnswerCell>((a, b) =>
+                    {
+                        if (a.Contour[0].Y > b.Contour[0].Y)
+                            return 1;
+                        else if (a.Contour[0].Y < b.Contour[0].Y)
+                            return -1;
+                        return 0;
+                    }));
+
+                    currentX = questionContours[i][0].X;
+                    currentGroup++;
+                    
+                    //Create new column
+                    answerSheet.Add(new List<AnswerCell>());
+                }
+            }
+
             imageResult.Image = thresh;
 
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            GUI gui = new GUI();
-            gui.Show();
+           
+        }
+
+        private void btStep5_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

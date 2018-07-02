@@ -105,6 +105,7 @@
             this.btStep5.TabIndex = 7;
             this.btStep5.Text = "Step 5";
             this.btStep5.UseVisualStyleBackColor = true;
+            this.btStep5.Click += new System.EventHandler(this.btStep5_Click);
             // 
             // Form1
             // 
